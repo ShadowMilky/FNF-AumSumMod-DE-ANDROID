@@ -61,8 +61,7 @@ class Paths
 		'stages',
 		'weeks',
 		'fonts',
-		'scripts',
-		'achievements'
+		'scripts'
 	];
 	#end
 
@@ -198,6 +197,16 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 
+	inline static public function jsonstate(key:String, ?library:String)
+		{
+			return getPath('custom_states/$key.json', TEXT, library);
+		}
+
+	inline static public function hx(key:String, ?library:String)
+		{
+			return getPath('custom_states/$key.hx', TEXT, library);
+		}
+
 	inline static public function shaderFragment(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.frag', TEXT, library);
@@ -263,6 +272,27 @@ class Paths
 	inline static public function imageOld(key:String, ?library:String)
 		{
 			return getPath('images/$key.png', IMAGE, library);
+		}
+
+		static public function loadStateJson(key:String, ?library:String):Dynamic
+		{			var rawJson = OpenFlAssets.getText(Paths.jsonstate(key, library)).trim();
+	
+			// Perform cleanup on files that have bad data at the end.
+			while (!rawJson.endsWith("}"))
+			{
+				rawJson = rawJson.substr(0, rawJson.length - 1);
+			}
+	
+			try
+			{
+				// Attempt to parse and return the JSON data.
+				return Json.parse(rawJson);
+			}
+			catch (e)
+			{
+				// Return null.
+				return null;
+			}
 		}
 
 	// Usage: Paths.fromI8("imageIwant", "shared");
